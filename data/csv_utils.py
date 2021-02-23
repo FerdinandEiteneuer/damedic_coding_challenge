@@ -1,15 +1,16 @@
 import csv
 import os
 
-def parse_csv(filename, skip_noninformative_icds=False):
+def parse_csv(datapath, filename, skip_noninformative_icds=False):
     '''
     Reads in the input files "test.csv" and "train.csv".
 
     If skip_noninformative_icds is True, any patient case
     with an icd count of 0 or 1 will not be read in.
     '''
-    datadir = os.path.dirname(__file__)
-    path = os.path.join(datadir, filename)
+    path = os.path.join(datapath, filename)
+
+    print('Parsing csv file:', path)
 
     data = {}
     with open(path) as csv_file:

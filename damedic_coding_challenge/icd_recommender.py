@@ -36,13 +36,13 @@ def create_autoencoder(input_shape, nb_encoding_features):
     )
 
     nadam = tensorflow.keras.optimizers.Nadam(
-        learning_rate=0.0004,
+        learning_rate=0.001,
         beta_1=0.9,
         beta_2=0.999,
     )
 
 
-    model.compile(optimizer=adam,
+    model.compile(optimizer=nadam,
               loss=tensorflow.keras.losses.BinaryCrossentropy(),
               #loss='mse',
               metrics=['accuracy'],
@@ -84,9 +84,11 @@ def get_recommendations(test_icds, nb_recommendations = 5):
 
 if __name__ == '__main__':
 
+    datapath = sys.argv[1]
+
     # data parsing
-    train = csv_utils.parse_csv('train.csv', skip_noninformative_icds=True)
-    test = csv_utils.parse_csv('test.csv', skip_noninformative_icds=False)
+    train = csv_utils.parse_csv(datapath, 'train.csv', skip_noninformative_icds=True)
+    test = csv_utils.parse_csv(datapath, 'test.csv', skip_noninformative_icds=False)
 
     # create training and test set based on input data
     tokenizer = create_tokenizer(train, test)
@@ -97,7 +99,7 @@ if __name__ == '__main__':
     # build autoencoder neural network with 1 hidden layer
     model = create_autoencoder(
         input_shape=(len(tokenizer.word_index) + 1,),
-        nb_encoding_features=256,
+        nb_encoding_features=128,
     )
     print(model.summary())
     print('optimizer:', model.optimizer.get_config())
