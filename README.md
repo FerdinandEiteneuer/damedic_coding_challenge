@@ -1,6 +1,6 @@
-#ICD Code Recommendation System 
+# ICD Code Recommendation System 
 
-## install
+## installation
 
 ```bash
 git clone git@github.com:FerdinandEiteneuer/damedic_coding_challenge.git
