@@ -18,6 +18,8 @@ Before using the program, copy 'train.csv' and 'test.csv' into one folder, e.g. 
 python damedic_coding_challenge/icd_recommender.py ./data/
 ```
 
+The recommendations are found inside `./recommendations.csv`.
+
 ## creating icd code recommendations
 
 The approach to create the patient recommendations was inspired by [“Collaborative Denoising Autoencoders for Top-N Recommender Systems”](https://alicezheng.org/papers/wsdm16-cdae.pdf). Steps:
