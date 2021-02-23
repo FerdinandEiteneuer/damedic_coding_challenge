@@ -5,8 +5,8 @@ def parse_csv(filename, skip_noninformative_icds=False):
     '''
     Reads in the input files "test.csv" and "train.csv".
 
-    if skip_noninformative_icds is True, any patient case
-    with an icd count of 0 or 1 will be ignored.
+    If skip_noninformative_icds is True, any patient case
+    with an icd count of 0 or 1 will not be read in.
     '''
     datadir = os.path.dirname(__file__)
     path = os.path.join(datadir, filename)
