@@ -1,6 +1,6 @@
 # ICD Code Recommendation System 
 
-## installation
+## Installation
 
 ```bash
 git clone git@github.com:FerdinandEiteneuer/damedic_coding_challenge.git
@@ -8,9 +8,9 @@ cd damedic_coding_challenge
 python setup.py install
 ```
 
-The `requirements.txt` contains tensorflow
+The `requirements.txt` contains tensorflow.
 
-## usage
+## Usage
 
 Before using the program, copy `train.csv` and `test.csv` into one folder, e.g. the data folder. This folder is input for the main skript `icd_recommender.py`.
 
@@ -20,7 +20,7 @@ python damedic_coding_challenge/icd_recommender.py ./data/
 
 The recommendations are found inside `./recommendations.csv`.
 
-## creating icd code recommendations
+## Creating the ICD recommendations
 
 The approach to create the patient recommendations was inspired by [“Collaborative Denoising Autoencoders for Top-N Recommender Systems”](https://alicezheng.org/papers/wsdm16-cdae.pdf). Steps:
 
