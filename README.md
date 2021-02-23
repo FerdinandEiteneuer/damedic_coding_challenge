@@ -12,7 +12,7 @@ The `requirements.txt` contains tensorflow
 
 ## usage
 
-Before using the program, copy 'train.csv' and 'test.csv' into one folder, e.g. the data folder. This folder is input for the main skript `icd_recommender.py`.
+Before using the program, copy `train.csv` and `test.csv` into one folder, e.g. the data folder. This folder is input for the main skript `icd_recommender.py`.
 
 ```python
 python damedic_coding_challenge/icd_recommender.py ./data/
