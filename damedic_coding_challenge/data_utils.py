@@ -1,4 +1,5 @@
 import numpy as np
+from tensorflow.keras.preprocessing.text import Tokenizer
 
 def number_noisy_inputs(seq):
     N = len(seq)
@@ -20,6 +21,7 @@ def create_noisy_train_data(tokenizer, train):
     a number of times given by the function number_noisy_inputs.
     For each replication, one icd code is dropped out.
     '''
+    print('Creating training data')
     cases = list(train.values())
 
     seqs = tokenizer.texts_to_sequences(cases)
@@ -46,6 +48,7 @@ def create_noisy_train_data(tokenizer, train):
 
 
 def create_test_data(tokenizer, test):
+    print('Creating test samples')
     cases = list(test.values())
 
     number_icds = len(tokenizer.word_index) + 1
@@ -56,5 +59,15 @@ def create_test_data(tokenizer, test):
     for n, seq in enumerate(seqs):
         X[n, tuple(seq)] = 1
     return X
+
+
+def create_tokenizer(train, test):
+
+    train_cases = list(train.values())
+    test_cases = list(test.values())
+
+    tokenizer = Tokenizer(lower=False)
+    tokenizer.fit_on_texts(train_cases + test_cases)
+    return tokenizer
 
 

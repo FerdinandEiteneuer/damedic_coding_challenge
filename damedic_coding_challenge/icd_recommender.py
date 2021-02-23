@@ -1,7 +1,8 @@
 import csv
 import sys
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # or any {'0', '1', '2'}
+import random
+#os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # or any {'0', '1', '2'}
 
 import tensorflow
 from tensorflow.keras.preprocessing.text import Tokenizer
@@ -10,7 +11,6 @@ from tensorflow.keras import models
 from tensorflow.keras import callbacks
 import numpy as np
 
-import time
 from data import csv_utils
 import data_utils
 
@@ -18,16 +18,11 @@ np.set_printoptions(linewidth=120)
 
 
 def create_autoencoder(input_shape, nb_encoding_features):
+
     model = models.Sequential()
 
-    #model.add(layers.Dense(512, input_shape=input_shape, activation='sigmoid'))
     model.add(layers.Dense(nb_encoding_features, input_shape=input_shape, activation='sigmoid'))
-    #model.add(layers.Dropout(0.2))
-    #model.add(layers.Dense(nb_encoding_features, activation='sigmoid'))
-
     model.add(layers.Dense(input_shape[0], activation='sigmoid'))
-    #model.add(layers.Dense(input_shape[0], activation='relu'))
-
 
     adam = tensorflow.keras.optimizers.Adam(
         learning_rate=0.001,
@@ -41,8 +36,7 @@ def create_autoencoder(input_shape, nb_encoding_features):
         beta_2=0.999,
     )
 
-
-    model.compile(optimizer=nadam,
+    model.compile(optimizer=adam,
               loss=tensorflow.keras.losses.BinaryCrossentropy(),
               #loss='mse',
               metrics=['accuracy'],
@@ -51,17 +45,7 @@ def create_autoencoder(input_shape, nb_encoding_features):
     return model
 
 
-def create_tokenizer(train, test):
-
-    train_cases = list(train.values())
-    test_cases = list(test.values())
-
-    tokenizer = Tokenizer(lower=False)
-    tokenizer.fit_on_texts(train_cases + test_cases)
-    return tokenizer
-
-
-def get_recommendations(test_icds, nb_recommendations = 5):
+def get_recommendations(test_icds, nb_recommendations=5):
 
     recommendations = []
 
@@ -82,7 +66,16 @@ def get_recommendations(test_icds, nb_recommendations = 5):
     return recommendations
 
 
+def set_random_seeds(n):
+    random.seed(n)
+    np.random.seed(n)
+    tensorflow.random.set_seed(n)
+
+# reproducibility
+set_random_seeds(123)
+
 if __name__ == '__main__':
+
 
     datapath = sys.argv[1]
 
@@ -91,7 +84,7 @@ if __name__ == '__main__':
     test = csv_utils.parse_csv(datapath, 'test.csv', skip_noninformative_icds=False)
 
     # create training and test set based on input data
-    tokenizer = create_tokenizer(train, test)
+    tokenizer = data_utils.create_tokenizer(train, test)
 
     X = data_utils.create_noisy_train_data(tokenizer, train)
     X_test = data_utils.create_test_data(tokenizer, test)
@@ -101,13 +94,13 @@ if __name__ == '__main__':
         input_shape=(len(tokenizer.word_index) + 1,),
         nb_encoding_features=128,
     )
-    print(model.summary())
-    print('optimizer:', model.optimizer.get_config())
 
-    # fit the model, use early stopping for regularization
+    print(model.summary())
+    print('\nOptimizer:', model.optimizer.get_config())
+
     early_stopping = callbacks.EarlyStopping(
         monitor='val_accuracy',
-        patience=30,
+        patience=8,
         min_delta=0.01,
         mode='max',
         restore_best_weights=True
@@ -115,7 +108,7 @@ if __name__ == '__main__':
 
     model.fit(x=X,
               y=X,
-              epochs=100,
+              epochs=40,
               batch_size=256,
               validation_data=(X_test, X_test),
               callbacks=[early_stopping],

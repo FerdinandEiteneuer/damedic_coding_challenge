@@ -36,7 +36,8 @@ def write_recommendations(patients, recommendations):
     '''
     Creates the final output file.
     '''
-    with open('recommendations.csv', 'w') as file:
+    filename = 'recommendations.csv'
+    with open(filename, 'w') as file:
 
         writer = csv.writer(file, delimiter=',', quoting=csv.QUOTE_ALL)
 
@@ -47,4 +48,4 @@ def write_recommendations(patients, recommendations):
 
             writer.writerow([patient, icds])
 
-
+    print('Created file:', filename)
