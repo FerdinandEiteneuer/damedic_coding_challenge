@@ -19,6 +19,7 @@ Before using the program, copy `train.csv` and `test.csv` into one folder, e.g. 
 CUDA_VISIBLE_DEVICES="" PYTHONHASHSEED=0 python ./damedic_coding_challenge/icd_recommender.py ./data/
 ```
 
+Since the random seeds are fixed, the training process should be reproducible and will finish due to Early Stopping after about 29 Epochs.
 The recommendations are found inside `./submission.csv`.
 
 Please note that about 8GB of free memory are required.
@@ -33,5 +34,4 @@ The approach to create the patient recommendations was inspired by [“Collabora
 3. After training, use the network to process the data from the test samples.
 4. To get the recommendations, use the 5 highest values of the predictions, while excluding the icd codes that were already present in the test samples.
 
-Since the random seeds are fixed, the training process should be reproducible and will finish due to Early Stopping after about 29 Epochs.
 
