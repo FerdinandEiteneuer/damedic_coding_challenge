@@ -19,7 +19,7 @@ Before using the program, copy `train.csv` and `test.csv` into one folder, e.g. 
 CUDA_VISIBLE_DEVICES="" PYTHONHASHSEED=0 python ./damedic_coding_challenge/icd_recommender.py ./data/
 ```
 
-Since the random seeds are fixed, the training process should be reproducible and will finish due to Early Stopping after about 29 Epochs.
+Since the random seeds are fixed, the training process should be reproducible and will finish due to Early Stopping after 40 Epochs.
 The recommendations are found inside `./submission.csv`.
 
 Please note that about 8GB of free memory are required.
