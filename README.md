@@ -15,10 +15,11 @@ Content of `requirements.txt` is tensorflow. The python version used was 3.8.
 Before using the program, copy `train.csv` and `test.csv` into one folder, e.g. the data folder. This folder is input for the main skript `icd_recommender.py`.
 
 ```python
-python damedic_coding_challenge/icd_recommender.py ./data/
+# env variables for reproducibility
+CUDA_VISIBLE_DEVICES="" PYTHONHASHSEED=0 python ./damedic_coding_challenge/icd_recommender.py ./data/
 ```
 
-The recommendations are found inside `./recommendations.csv`.
+The recommendations are found inside `./submission.csv`.
 
 Please note that about 8GB of free memory are required.
 
@@ -32,5 +33,5 @@ The approach to create the patient recommendations was inspired by [“Collabora
 3. After training, use the network to process the data from the test samples.
 4. To get the recommendations, use the 5 highest values of the predictions, while excluding the icd codes that were already present in the test samples.
 
-Since the random seeds are fixed, the training process should be reproducible and require about 25 Epochs.
+Since the random seeds are fixed, the training process should be reproducible and will finish due to Early Stopping after about 29 Epochs.
 
