@@ -1,5 +1,6 @@
 import numpy as np
 from tensorflow.keras.preprocessing.text import Tokenizer
+DTYPE = np.float32
 
 def number_noisy_inputs(seq):
     N = len(seq)
@@ -30,7 +31,8 @@ def create_noisy_train_data(tokenizer, train):
     number_icds = len(tokenizer.word_index) + 1
 
     shape = (size, number_icds)
-    X = np.zeros(shape)
+    X_corrupted = np.zeros(shape, dtype=DTYPE)
+    X_true = np.zeros(shape, dtype=DTYPE)
 
     i=0
     for seq in seqs:
@@ -41,10 +43,11 @@ def create_noisy_train_data(tokenizer, train):
             noisy = seq[:]
             noisy.remove(dropout)
 
-            X[i, noisy] = 1
+            X_corrupted[i, noisy] = 1
+            X_true[i, seq] = 1
             i+=1
 
-    return X
+    return X_corrupted, X_true
 
 
 def create_test_data(tokenizer, test):
@@ -55,7 +58,7 @@ def create_test_data(tokenizer, test):
     number_cases = len(cases)
     seqs = tokenizer.texts_to_sequences(cases)
 
-    X = np.zeros((number_cases, number_icds))
+    X = np.zeros((number_cases, number_icds), dtype=DTYPE)
     for n, seq in enumerate(seqs):
         X[n, tuple(seq)] = 1
     return X

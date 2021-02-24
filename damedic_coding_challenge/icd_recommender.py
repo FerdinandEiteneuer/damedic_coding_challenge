@@ -1,3 +1,6 @@
+'''
+ICD Recommender System
+'''
 import csv
 import sys
 import os
@@ -83,11 +86,10 @@ if __name__ == '__main__':
     # data parsing
     train = csv_utils.parse_csv(datapath, 'train.csv', skip_noninformative_icds=True)
     test = csv_utils.parse_csv(datapath, 'test.csv', skip_noninformative_icds=False)
-
-    # create training and test set based on input data
     tokenizer = data_utils.create_tokenizer(train, test)
 
-    X = data_utils.create_noisy_train_data(tokenizer, train)
+    # create training and test set based on input data
+    X_currupted, X_true = data_utils.create_noisy_train_data(tokenizer, train)
     X_test = data_utils.create_test_data(tokenizer, test)
 
     # build autoencoder neural network with 1 hidden layer
@@ -107,8 +109,8 @@ if __name__ == '__main__':
         restore_best_weights=True
     )
 
-    model.fit(x=X,
-              y=X,
+    model.fit(x=X_currupted,
+              y=X_true,
               epochs=40,
               batch_size=256,
               validation_data=(X_test, X_test),
