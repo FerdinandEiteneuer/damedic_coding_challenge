@@ -1,11 +1,11 @@
-'''
+"""
 ICD Recommender System
-'''
+"""
 import csv
 import sys
 import os
 import random as python_random
-#os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # or any {'0', '1', '2'}
+# os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # or any {'0', '1', '2'}
 
 import tensorflow
 from tensorflow.keras.preprocessing.text import Tokenizer
@@ -21,12 +21,23 @@ np.set_printoptions(linewidth=120)
 
 
 def create_autoencoder(input_shape, nb_encoding_features):
-
     act = 'selu'
     model = models.Sequential()
 
-    model.add(layers.Dense(nb_encoding_features, input_shape=input_shape, activation=act, kernel_initializer='lecun_normal'))
-    model.add(layers.Dense(input_shape[0], activation=act, kernel_initializer='lecun_normal'))
+    model.add(layers.Dense(
+        nb_encoding_features,
+        input_shape=input_shape,
+        activation=act,
+        kernel_initializer='lecun_normal'
+        )
+    )
+
+    model.add(layers.Dense(
+        input_shape[0],
+        activation=act,
+        kernel_initializer='lecun_normal'
+        )
+    )
 
     adam = tensorflow.keras.optimizers.Adam(
         learning_rate=0.0001,
@@ -34,16 +45,10 @@ def create_autoencoder(input_shape, nb_encoding_features):
         beta_2=0.999,
     )
 
-    nadam = tensorflow.keras.optimizers.Nadam(
-        learning_rate=0.0001,
-        beta_1=0.9,
-        beta_2=0.999,
-    )
-
-    model.compile(optimizer=adam,
-              loss=tensorflow.keras.losses.BinaryCrossentropy(),
-              #loss='mse',
-              metrics=['accuracy'],
+    model.compile(
+        optimizer=adam,
+        loss=tensorflow.keras.losses.BinaryCrossentropy(),
+        metrics=['accuracy'],
     )
 
     return model
@@ -75,11 +80,11 @@ def set_random_seeds(n):
     np.random.seed(n)
     tensorflow.random.set_seed(n)
 
+
 # reproducibility
 set_random_seeds(123)
 
 if __name__ == '__main__':
-
 
     datapath = sys.argv[1]
 
@@ -89,7 +94,7 @@ if __name__ == '__main__':
     tokenizer = data_utils.create_tokenizer(train, test)
 
     # create training and test set based on input data
-    X_currupted, X_true = data_utils.create_noisy_train_data(tokenizer, train)
+    X_corrupted, X_true = data_utils.create_noisy_train_data(tokenizer, train)
     X_test = data_utils.create_test_data(tokenizer, test)
 
     # build autoencoder neural network with 1 hidden layer
@@ -109,7 +114,7 @@ if __name__ == '__main__':
         restore_best_weights=True
     )
 
-    model.fit(x=X_currupted,
+    model.fit(x=X_corrupted,
               y=X_true,
               epochs=40,
               batch_size=256,
@@ -117,7 +122,6 @@ if __name__ == '__main__':
               callbacks=[early_stopping],
               verbose=True,
     )
-
 
     # use the model to create the recommendations
     test_icds = model(X_test).numpy()
@@ -127,4 +131,3 @@ if __name__ == '__main__':
         patients=test.keys(),
         recommendations=recommendations
     )
-

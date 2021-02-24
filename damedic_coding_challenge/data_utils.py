@@ -1,6 +1,11 @@
+"""
+Utilities for creating the training and test data.
+"""
+
 import numpy as np
 from tensorflow.keras.preprocessing.text import Tokenizer
 DTYPE = np.float32
+
 
 def number_noisy_inputs(seq):
     N = len(seq)
@@ -17,11 +22,11 @@ def number_noisy_inputs(seq):
 
 
 def create_noisy_train_data(tokenizer, train):
-    '''
+    """
     Creates the training data. Each input patient case is repeated
     a number of times given by the function number_noisy_inputs.
     For each replication, one icd code is dropped out.
-    '''
+    """
     print('Creating training data')
     cases = list(train.values())
 
@@ -34,18 +39,17 @@ def create_noisy_train_data(tokenizer, train):
     X_corrupted = np.zeros(shape, dtype=DTYPE)
     X_true = np.zeros(shape, dtype=DTYPE)
 
-    i=0
+    i = 0
     for seq in seqs:
         n = number_noisy_inputs(seq)
         dropouts = np.random.choice(seq, n, replace=False)
         for dropout in dropouts:
-            x = np.zeros(shape)
             noisy = seq[:]
             noisy.remove(dropout)
 
             X_corrupted[i, noisy] = 1
             X_true[i, seq] = 1
-            i+=1
+            i += 1
 
     return X_corrupted, X_true
 
@@ -72,5 +76,3 @@ def create_tokenizer(train, test):
     tokenizer = Tokenizer(lower=False)
     tokenizer.fit_on_texts(train_cases + test_cases)
     return tokenizer
-
-
