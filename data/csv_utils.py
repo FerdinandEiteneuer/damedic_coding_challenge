@@ -36,7 +36,7 @@ def write_recommendations(patients, recommendations):
     '''
     Creates the final output file.
     '''
-    filename = 'recommendations.csv'
+    filename = 'submission.csv'
     with open(filename, 'w') as file:
 
         writer = csv.writer(file, delimiter=',', quoting=csv.QUOTE_ALL)
