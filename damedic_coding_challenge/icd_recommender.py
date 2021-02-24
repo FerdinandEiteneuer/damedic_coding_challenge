@@ -116,7 +116,7 @@ if __name__ == '__main__':
 
     model.fit(x=X_corrupted,
               y=X_true,
-              epochs=40,
+              epochs=60,
               batch_size=256,
               validation_data=(X_test, X_test),
               callbacks=[early_stopping],
