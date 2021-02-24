@@ -1,13 +1,18 @@
+"""
+Parses the csv files `train.csv` and `test.csv`.
+"""
+
 import csv
 import os
 
+
 def parse_csv(datapath, filename, skip_noninformative_icds=False):
-    '''
+    """
     Reads in the input files "test.csv" and "train.csv".
 
     If skip_noninformative_icds is True, any patient case
     with an icd count of 0 or 1 will not be read in.
-    '''
+    """
     path = os.path.join(datapath, filename)
 
     print('Parsing csv file:', path)
@@ -33,9 +38,9 @@ def parse_csv(datapath, filename, skip_noninformative_icds=False):
 
 
 def write_recommendations(patients, recommendations):
-    '''
+    """
     Creates the final output file.
-    '''
+    """
     filename = 'submission.csv'
     with open(filename, 'w') as file:
 
