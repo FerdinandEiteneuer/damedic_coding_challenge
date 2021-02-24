@@ -1,7 +1,7 @@
 import csv
 import sys
 import os
-import random
+import random as python_random
 #os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # or any {'0', '1', '2'}
 
 import tensorflow
@@ -19,19 +19,20 @@ np.set_printoptions(linewidth=120)
 
 def create_autoencoder(input_shape, nb_encoding_features):
 
+    act = 'selu'
     model = models.Sequential()
 
-    model.add(layers.Dense(nb_encoding_features, input_shape=input_shape, activation='sigmoid'))
-    model.add(layers.Dense(input_shape[0], activation='sigmoid'))
+    model.add(layers.Dense(nb_encoding_features, input_shape=input_shape, activation=act, kernel_initializer='lecun_normal'))
+    model.add(layers.Dense(input_shape[0], activation=act, kernel_initializer='lecun_normal'))
 
     adam = tensorflow.keras.optimizers.Adam(
-        learning_rate=0.001,
+        learning_rate=0.0001,
         beta_1=0.9,
         beta_2=0.999,
     )
 
     nadam = tensorflow.keras.optimizers.Nadam(
-        learning_rate=0.001,
+        learning_rate=0.0001,
         beta_1=0.9,
         beta_2=0.999,
     )
@@ -67,7 +68,7 @@ def get_recommendations(test_icds, nb_recommendations=5):
 
 
 def set_random_seeds(n):
-    random.seed(n)
+    python_random.seed(n)
     np.random.seed(n)
     tensorflow.random.set_seed(n)
 
